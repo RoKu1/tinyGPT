@@ -1,1 +1,7 @@
 .venv/
+tinygpt_char/.pycache/
+tinygpt_char/__pycache__/
+.ruff*
+tinygpt_bpe/.pycache/
+tinygpt_bpe/__pycache__/
+full_tiny_stories.txt
