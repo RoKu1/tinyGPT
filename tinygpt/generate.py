@@ -2,13 +2,16 @@ import torch
 from tinygpt.model import GPTConfig, TinyGPT
 from tinygpt.data import decode
 
-def sample(model, idx, num_tokens, stoi, itos, temperature=1.0, top_k=None, device="cpu"):
+
+def sample(
+    model, idx, num_tokens, stoi, itos, temperature=1.0, top_k=None, device="cpu"
+):
     model.eval()
     idx = torch.tensor(idx, dtype=torch.long, device=device).unsqueeze(0)
     for _ in range(num_tokens):
-        idx_cond = idx[:, -model.pos_emb.num_embeddings:]  # last block_size chars
+        idx_cond = idx[:, -model.pos_emb.num_embeddings :]  # last block_size chars
         logits = model(idx_cond)
-        logits = logits[:, -1, :] / temperature           # last time step
+        logits = logits[:, -1, :] / temperature  # last time step
         if top_k is not None:
             vals, _ = torch.topk(logits, top_k)
             logits[logits < vals[..., -1, None]] = -float("Inf")
@@ -16,6 +19,7 @@ def sample(model, idx, num_tokens, stoi, itos, temperature=1.0, top_k=None, devi
         next_id = torch.multinomial(probs, num_samples=1)
         idx = torch.cat((idx, next_id), dim=1)
     return idx[0].tolist()
+
 
 def load_model(checkpoint_path="tinygpt/checkpoint.pt", device="mps"):
     checkpoint = torch.load(checkpoint_path, map_location=device)
@@ -25,6 +29,7 @@ def load_model(checkpoint_path="tinygpt/checkpoint.pt", device="mps"):
     model = model.to(device)
     model.eval()
     return model, checkpoint["stoi"], checkpoint["itos"]
+
 
 if __name__ == "__main__":
     model, stoi, itos = load_model()

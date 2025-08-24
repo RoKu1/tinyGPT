@@ -1,20 +1,24 @@
 # from pathlib import Path
 import numpy as np
 
+
 def get_train_val_splits(encoded, train_frac=0.9):
     idx = int(len(encoded) * train_frac)
     return encoded[:idx], encoded[idx:]
 
+
 def get_batch(data, batch_size, block_size):
     ix = np.random.randint(0, len(data) - block_size, (batch_size,))
-    x = np.stack([np.array(data[i:i+block_size]) for i in ix])
-    y = np.stack([np.array(data[i+1:i+1+block_size]) for i in ix])
+    x = np.stack([np.array(data[i : i + block_size]) for i in ix])
+    y = np.stack([np.array(data[i + 1 : i + 1 + block_size]) for i in ix])
     return x, y
+
 
 def load_shakespeare(path="tiny_shakespeare.txt"):
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
     return text
+
 
 def build_vocab(text):
     vocab = sorted(list(set(text)))
@@ -22,11 +26,13 @@ def build_vocab(text):
     itos = {i: ch for i, ch in enumerate(vocab)}
     return vocab, stoi, itos
 
+
 def encode(text, stoi):
     return [stoi[c] for c in text]
 
+
 def decode(ids, itos):
-    return ''.join([itos[i] for i in ids])
+    return "".join([itos[i] for i in ids])
 
 
 if __name__ == "__main__":

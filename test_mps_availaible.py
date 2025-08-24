@@ -15,4 +15,3 @@ y = x @ x.t()
 print("Device used:", device)
 
 print("y mean:", y.mean().item())
-
